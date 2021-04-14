@@ -6,7 +6,7 @@ namespace GalaxyProject.Models
     public class Star : ABaseSpaceObject
     {
         public Star(string aName, decimal aMass, decimal aSize,
-                    decimal aLuminosity, decimal aTemperature)
+                    decimal aLuminosity, int aTemperature)
             : base(aName)
         {
             this.Mass = aMass;
@@ -23,7 +23,7 @@ namespace GalaxyProject.Models
 
         public decimal Luminosity { get; set; }
 
-        public decimal Temperature { get; set; }
+        public int Temperature { get; set; }
 
         public StarClass StarClass { get; private set; }
 

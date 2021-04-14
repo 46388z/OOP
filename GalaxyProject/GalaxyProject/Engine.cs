@@ -113,7 +113,7 @@ namespace GalaxyProject
             decimal mass = decimal.Parse(aMassStr);
             decimal size = decimal.Parse(aSizeStr);
             decimal luminosity = decimal.Parse(aLuminosityStr);
-            decimal temp = decimal.Parse(aTempStr);
+            int temp = int.Parse(aTempStr);
             Star star = new Star(aStarName, mass, size, luminosity, temp);
             Galaxy galaxy = this.galaxies.SingleOrDefault(x => x.Name == aGalaxyName);
 
