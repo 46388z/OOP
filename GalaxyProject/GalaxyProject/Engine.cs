@@ -1,10 +1,10 @@
-﻿using System;
+﻿using GalaxyProject.Enums;
+using GalaxyProject.Models;
+using GalaxyProject.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GalaxyProject.Enums;
-using GalaxyProject.Models;
-using GalaxyProject.Utils;
 
 namespace GalaxyProject
 {
@@ -16,7 +16,7 @@ namespace GalaxyProject
         {
             this.galaxies = new List<Galaxy>();
         }
-        
+
         public void Run()
         {
             while (true)
@@ -38,20 +38,23 @@ namespace GalaxyProject
                 .Select(x => x.Replace("]", ""))
                 .ToArray();
             string action = tokens[0];
-            if(tokens.Length > 1)
+            if (tokens.Length > 1)
             {
                 string arg1 = tokens[1];
-                if(action == "add")
+                if (action == "add")
                 {
                     this.AddSpaceObjects(arg1, tokens);
-                } else if (action == "list")
+                }
+                else if (action == "list")
                 {
                     this.ListSpaceObjects(arg1);
-                }else if (action == "print")
+                }
+                else if (action == "print")
                 {
                     this.PrintGalaxyInfo(tokens[1]);
                 }
-            } else if (action == "stats")
+            }
+            else if (action == "stats")
             {
                 this.GenerateStats();
             }
@@ -91,24 +94,24 @@ namespace GalaxyProject
                     this.ListPlanets();
                     break;
                 case "moons":
-                    this.ListMoons();   
+                    this.ListMoons();
                     break;
             }
         }
 
-        private void AddGalaxy(string aName, string aGalaxyType, string aAgeStr) 
+        private void AddGalaxy(string aName, string aGalaxyType, string aAgeStr)
         {
             decimal age = decimal.Parse(aAgeStr.Substring(0, aAgeStr.Length - 1));
-            AgeType ageType = (AgeType) Enum.Parse(typeof(AgeType), "" + aAgeStr[aAgeStr.Length - 1]);
+            AgeType ageType = (AgeType)Enum.Parse(typeof(AgeType), "" + aAgeStr[aAgeStr.Length - 1]);
             string galaxyTypeEnumName = char.ToUpper(aGalaxyType[0]) + aGalaxyType.Substring(1);
-            GalaxyType galaxyType = (GalaxyType) Enum.Parse(typeof(GalaxyType), galaxyTypeEnumName);
+            GalaxyType galaxyType = (GalaxyType)Enum.Parse(typeof(GalaxyType), galaxyTypeEnumName);
             Galaxy galaxy = new Galaxy(aName, age, ageType, galaxyType);
 
             this.galaxies.Add(galaxy);
         }
 
         private void AddStar(string aGalaxyName, string aStarName, string aMassStr,
-            string aSizeStr, string aTempStr, string aLuminosityStr)  
+            string aSizeStr, string aTempStr, string aLuminosityStr)
         {
             decimal mass = decimal.Parse(aMassStr);
             decimal size = decimal.Parse(aSizeStr);
@@ -120,7 +123,7 @@ namespace GalaxyProject
             galaxy.Stars.Add(star);
         }
 
-        private void AddPlanet(string aStarName, string aPlanetName, 
+        private void AddPlanet(string aStarName, string aPlanetName,
                                string aPlanetTypeStr, string aIsSupportLifeStr)
         {
             PlanetType planetType = Enum.GetValues(typeof(PlanetType))
@@ -148,7 +151,7 @@ namespace GalaxyProject
         private void ListGalaxies()
         {
             var galaxyNames = this.galaxies.Select(x => x.Name).ToList();
-            
+
             Console.WriteLine("--- List of all researched galaxies ---");
             if (!galaxyNames.Any())
             {
@@ -188,7 +191,7 @@ namespace GalaxyProject
                 .Select(x => x.Name)
                 .ToList();
 
-            Console.WriteLine("--- List of all researched planets ---");    
+            Console.WriteLine("--- List of all researched planets ---");
             if (!planetNames.Any())
             {
                 Console.WriteLine("none");
@@ -254,7 +257,7 @@ namespace GalaxyProject
             var galaxy = this.galaxies.SingleOrDefault(x => x.Name == aGalaxyName);
             var stars = galaxy.Stars.OrderBy(x => x.StarClass);
             string galaxyAge = "" + galaxy.Age + galaxy.AgeType;
-            
+
             Console.WriteLine($"--- Data for {aGalaxyName} galaxy ---");
             Console.WriteLine($"Type: {galaxy.GalaxyType.GetFriendlyName()}");
             Console.WriteLine($"Age: {galaxyAge}");
@@ -269,7 +272,7 @@ namespace GalaxyProject
                 {
                     var planets = star.Planets;
                     Console.WriteLine($"   - Name: {star.Name}");
-                    Console.WriteLine($"     Class: {star.StarClass} ({star.Mass}, {star.Size}, {star.Temperature}, {star.Luminosity})");
+                    Console.WriteLine($"     Class: {star.StarClass} ({star.Mass}, {star.Radius}, {star.Temperature}, {star.Luminosity})");
 
                     if (!planets.Any())
                     {
@@ -281,7 +284,7 @@ namespace GalaxyProject
                         foreach (var planet in planets)
                         {
                             var moons = planet.Moons;
-                            string isSupportLive = planet.IsLiveable ? "yes": "no";
+                            string isSupportLive = planet.IsLiveable ? "yes" : "no";
                             Console.WriteLine($"        o Name: {planet.Name}");
                             Console.WriteLine($"          Type: {planet.PlanetType.GetFriendlyName()}");
                             Console.WriteLine($"          Support life: {isSupportLive}");
